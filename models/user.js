@@ -1,6 +1,15 @@
 const mongoose = require('mongoose');
 
 // create the schema
+const foodSchema=new mongoose.Schema({
+  name:{
+    type:String,
+    required:true,
+  }
+
+})
+
+
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -11,6 +20,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  pantry:[foodSchema],
 });
 // initial the model
 

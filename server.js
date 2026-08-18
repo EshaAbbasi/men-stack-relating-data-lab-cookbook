@@ -16,6 +16,7 @@ const addUserToViews = require('./middleware/addUserToViews');
 
 // CONTROLLERS
 const authCtrl = require('./controllers/authCtrl');
+const foodCtrl=require('./controllers/foodsCtrl');
 
 // Set the port from environment variable or default to 3000
 const port = process.env.PORT ? process.env.PORT : '3000';
@@ -56,6 +57,16 @@ app.get('/auth/sign-out', authCtrl.signout);
 app.get('/protected', async (req, res) => {
   res.send(`You are logged in as ${req.session.user.username}`);
 });
+
+//food
+app.get('/users/:id/foods',foodCtrl.index);
+app.get('/users/:id/foods/new',foodCtrl.new);
+app.post('/users/:id/foods',foodCtrl.create);
+app.get('/user/:id/foods/:foodId',foodCtrl.show);
+app.delete('/user/:id/foods/:foodId',foodCtrl.delete);
+app.get('/user/:id/foods/:foodId/edit',foodCtrl.edit);
+app.put('/user/:id/foods/:foodId',foodCtrl.update);
+
 
 app.listen(port, () => {
   console.log(`The express app is ready on port ${port}!`);
