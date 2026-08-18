@@ -6,6 +6,14 @@
     <title>My Pantry</title>
   </head>
   <body>
-    <h1>Welcome to my Pantry</h1>
+     <h1><%= food.name %></h1>
+    <%- include('../partials/_navbar.ejs') %>
+    <h1>Edit Pantry Item</h1>
+    <form action="/users/<%=user._id%>/foods/<%=food._id%>_method=PUT" method="POST">
+  <label for="name">Item Name</label>
+  <input type="text" name="name" id="name" required>
+  <button type="submit">Update Item</button>
+</form>
+ <a href="/users/<%=user._id%>/foods/">Back to pantry</a>
   </body>
 </html>

@@ -5,18 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Pantry</title>
   </head>
-  <body>
+  <body>  <h1><%= food.name %></h1>
     <%- include('../partials/_navbar.ejs') %>
     <h1>Welcome to my Pantry</h1>
     <a href="/users/<%=user._id%>/foods/new">Add an Item</a>
-    if(user.pantry.length===0)
-    {<p>Your pantry is empty.Add your first item</p>
+    <%if(food.length===0){%>
+         <p>Your pantry is empty.Add your first item</p>
 
-    }
-    else{
+   <% }
+    else{%>
         <ul>
-            user.pantry.foreach
-    }
-     <ul>
+           <% foods.foreach(function(food){%>
+                <li>
+                    <a href="/users/<%=user._id%>/foods/<%=food._id%>"><%food.name%></a>
+                         <a href="/users/<%=user._id%>/<%=food._id%>/edit">Edit</a>
+                             <form action="/users/<%=user._id%>/<%=food._id%?_method=Delete" method="POST">
+                                <button type="submit">Delete</button>
+                                </form>
+                </li>
+                <%});%>
 
-     </ul>
+                              
+                </ul>
+            <%}%>
+    
+   
+
+  </body>
+</html>

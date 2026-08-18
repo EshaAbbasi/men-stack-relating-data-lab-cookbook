@@ -5,17 +5,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add a New App</title>
+    <title>Add a Pantry Item</title>
   </head>
   <body>
     <%- include('../partials/_navbar.ejs') %>
-    <h1>Add a New App</h1>
+    <h1>Add a Pantry Item</h1>
     <!-- views/applications/new.ejs -->
-<div class="new-body">
-<form action="/users/<%=user._id%>/applications" method="POST">
-  
+
+<form action="/users/<%=user._id%>/foods" method="POST">
+  <label for="name">Item Name</label>
+  <input type="text" name="name" id="name" required>
   <button type="submit">submit</button>
 </form>
+ <a href="/users/<%=user._id%>/foods/">Back to pantry</a>
 </div>
   </body>
 </html>
