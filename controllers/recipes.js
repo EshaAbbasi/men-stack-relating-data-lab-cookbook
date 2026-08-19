@@ -5,7 +5,7 @@ const index=async(req,res)=>
 {
     try{
         const user=await User.findById(req.params.id);
-        res.render('foods/index.ejs',{foods:user.foods})
+        res.render('recipes/index.ejs',{recipes:user.recipes})
     }
     catch(err){
         res.redirect('/')
@@ -14,7 +14,7 @@ const index=async(req,res)=>
 const newApp=async(req,res)=>
 {
     try{
-         res.render('foods/new.ejs')}
+         res.render('recipes/new.ejs')}
     catch(err){
         res.redirect('/');
 
@@ -23,15 +23,15 @@ const newApp=async(req,res)=>
 };
 const create=async(req,res)=>{
     try{
-        const user=await User.findById(req.params.id);
-        user.foods.push(req.body);
-        await user.save();
-        res.redirect('/users/:id/foods');
+         const newRecipe = new Recipe(req.body);
+    newRecipe.owner = req.session.user._id;
+    await newRecipe.save();
+        res.redirect('/users/:id/recipes');
 
     }
     catch(err){
  console.log(err);
-        res.redirect('/users/:id/foods/new');
+        res.redirect('/users/:id/recipes/new');
 
 }}
 
@@ -39,8 +39,8 @@ const create=async(req,res)=>{
     {
     try{
         const user= await User.findById(req.params.id);
-const food=user.foods.id(req.params.appId);
-         res.render('foods/show.ejs',{food})}
+const frecipes=user.recipes.id(req.params.appId);
+         res.render('recipes/show.ejs',{recipe})}
     catch(err){
         res.redirect('/');
 
@@ -51,9 +51,9 @@ const deleteApp = async(req,res)=>
 {
     try{
         const user= await User.findById(req.params.id);
-user.foodss.pull(req.params.appId);
+user.recipes.pull(req.params.appId);
 await user.save();
-res.redirect('/users/${user._id}/foods');}
+res.redirect('/users/${user._id}/recipes');}
        
     catch(err){
         res.redirect('/');
@@ -65,9 +65,9 @@ const edit = async(req,res)=>
 {
     try{
         const user= await User.findById(req.params.id);
-const food=user.foods.id(req.params.appId);
+const recipe=user.recipes.id(req.params.appId);
 await user.save();
-res.render('foods/edit.ejs',{food});
+res.render('recipes/edit.ejs',{recipes});
 }
        
     catch(err){
@@ -78,10 +78,10 @@ const update = async(req,res)=>
 {
     try{
         const user= await User.findById(req.params.id);
-const food=user.foods.id(req.params.appId);
+const recipe=user.recipes.id(req.params.appId);
 application.set(req.body);
 await user.save();
-  res.redirect(`/users/${user._id}/foods/${food._id}`);
+  res.redirect(`/users/${user._id}/recipes/${recipe._id}`);
 }
        
     catch(err){

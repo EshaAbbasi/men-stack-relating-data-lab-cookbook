@@ -2,6 +2,9 @@
 /* eslint-disable no-console */
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
+const Recipe = require('../models/recipe');
+const Ingredient=require('../models/ingredient');
+
 
 const SALT_ROUDS = 10;
 

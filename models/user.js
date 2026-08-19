@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   pantry:[foodSchema],
+ 
 });
 // initial the model
 
