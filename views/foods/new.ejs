@@ -1,23 +1,12 @@
+<%- include('../partials/_navbar.ejs') %>
 
+<h1>Add New Pantry Item</h1>
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add a Pantry Item</title>
-  </head>
-  <body>
-    <%- include('../partials/_navbar.ejs') %>
-    <h1>Add a Pantry Item</h1>
-    <!-- views/applications/new.ejs -->
-
-<form action="/users/<%=user._id%>/foods" method="POST">
+<form action="/foods" method="POST">
   <label for="name">Item Name</label>
   <input type="text" name="name" id="name" required>
-  <button type="submit">submit</button>
+
+  <button type="submit">Add to Pantry</button>
 </form>
- <a href="/users/<%=user._id%>/foods/">Back to pantry</a>
-</div>
-  </body>
-</html>
+
+<a href="/foods">Back to Pantry</a>

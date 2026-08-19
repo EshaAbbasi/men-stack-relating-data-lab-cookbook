@@ -1,103 +1,88 @@
-const User=require('../models/user');
 const Recipe = require('../models/recipe');
-const Ingredient=require('../models/ingredient');
-const index=async(req,res)=>
-{
-    try{
-        const user=await User.findById(req.params.id);
-        res.render('recipes/index.ejs',{recipes:user.recipes})
-    }
-    catch(err){
-        res.redirect('/')
-    }
-};
-const newApp=async(req,res)=>
-{
-    try{
-         res.render('recipes/new.ejs')}
-    catch(err){
-        res.redirect('/');
+const Ingredient = require('../models/ingredient');
 
-
-    }
-};
-const create=async(req,res)=>{
-    try{
-         const newRecipe = new Recipe(req.body);
-    newRecipe.owner = req.session.user._id;
-    await newRecipe.save();
-        res.redirect('/users/:id/recipes');
-
-    }
-    catch(err){
- console.log(err);
-        res.redirect('/users/:id/recipes/new');
-
-}}
-
-    const show=async(req,res)=>
-    {
-    try{
-        const user= await User.findById(req.params.id);
-const frecipes=user.recipes.id(req.params.appId);
-         res.render('recipes/show.ejs',{recipe})}
-    catch(err){
-        res.redirect('/');
-
-
-    }
-};
-const deleteApp = async(req,res)=>
-{
-    try{
-        const user= await User.findById(req.params.id);
-user.recipes.pull(req.params.appId);
-await user.save();
-res.redirect('/users/${user._id}/recipes');}
-       
-    catch(err){
-        res.redirect('/');
-
-
-    }
-};
-const edit = async(req,res)=>
-{
-    try{
-        const user= await User.findById(req.params.id);
-const recipe=user.recipes.id(req.params.appId);
-await user.save();
-res.render('recipes/edit.ejs',{recipes});
-}
-       
-    catch(err){
-        res.redirect('/');
-
-    }}
-const update = async(req,res)=>
-{
-    try{
-        const user= await User.findById(req.params.id);
-const recipe=user.recipes.id(req.params.appId);
-application.set(req.body);
-await user.save();
-  res.redirect(`/users/${user._id}/recipes/${recipe._id}`);
-}
-       
-    catch(err){
-        res.redirect('/');
-
-
-    }
+const index = async (req, res) => {
+  try {
+    const recipes = await Recipe.find({ owner: req.session.user._id });
+    res.render('recipes/index.ejs', { recipes });
+  } catch (err) {
+    console.log(err);
+    res.redirect('/');
+  }
 };
 
+const newRecipe = async (req, res) => {
+  try {
+    const ingredients = await Ingredient.find({});
+    res.render('recipes/new.ejs', { ingredients });
+  } catch (err) {
+    console.log(err);
+    res.redirect('/recipes');
+  }
+};
 
-module.exports={
-    index,
-    new:newApp,
-    create,
-    show,
-    delete:deleteApp,
-edit,
-update
-}
+const create = async (req, res) => {
+  try {
+    req.body.owner = req.session.user._id;
+    if (!Array.isArray(req.body.ingredients)) {
+      req.body.ingredients = req.body.ingredients ? [req.body.ingredients] : [];
+    }
+    await Recipe.create(req.body);
+    res.redirect('/recipes');
+  } catch (err) {
+    console.log(err);
+    res.redirect('/recipes/new');
+  }
+};
+
+const show = async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id).populate('ingredients').populate('owner');
+    res.render('recipes/show.ejs', { recipe });
+  } catch (err) {
+    console.log(err);
+    res.redirect('/recipes');
+  }
+};
+
+const edit = async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    if (!recipe.owner.equals(req.session.user._id)) return res.redirect('/recipes');
+    const ingredients = await Ingredient.find({});
+    res.render('recipes/edit.ejs', { recipe, ingredients });
+  } catch (err) {
+    console.log(err);
+    res.redirect('/recipes');
+  }
+};
+
+const update = async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    if (!recipe.owner.equals(req.session.user._id)) return res.redirect('/recipes');
+    if (!Array.isArray(req.body.ingredients)) {
+      req.body.ingredients = req.body.ingredients ? [req.body.ingredients] : [];
+    }
+    await Recipe.findByIdAndUpdate(req.params.id, req.body);
+    res.redirect(`/recipes/${req.params.id}`);
+  } catch (err) {
+    console.log(err);
+    res.redirect('/recipes');
+  }
+};
+
+const deleteRecipe = async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    if (recipe.owner.equals(req.session.user._id)) {
+      await Recipe.findByIdAndDelete(req.params.id);
+    }
+    res.redirect('/recipes');
+  } catch (err) {
+    console.log(err);
+    res.redirect('/recipes');
+  }
+};
+
+module.exports = { index, new: newRecipe, create, show, edit, update, delete: deleteRecipe };

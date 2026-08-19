@@ -1,11 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>show</title>
-  </head>
-  <body>
-    <h1>Welcome to My Recipes</h1>
-  </body>
-</html>
+<%- include('../partials/_navbar.ejs') %>
+
+<h1><%= recipe.name %></h1>
+
+<p>By: <%= recipe.owner.username %></p>
+
+<h3>Instructions</h3>
+<p><%= recipe.instructions %></p>
+
+<h3>Ingredients</h3>
+<% if (recipe.ingredients.length === 0) { %>
+  <p>No ingredients listed.</p>
+<% } else { %>
+  <ul>
+    <% recipe.ingredients.forEach(function(ingredient) { %>
+      <li><%= ingredient.name %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<% if (user && recipe.owner._id.equals(user._id)) { %>
+  <a href="/recipes/<%= recipe._id %>/edit">Edit</a>
+
+  <form action="/recipes/<%= recipe._id %>?_method=DELETE" method="POST">
+    <button type="submit">Delete</button>
+  </form>
+<% } %>
+
+<a href="/recipes">Back to My Recipes</a>

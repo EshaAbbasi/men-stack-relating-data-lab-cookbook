@@ -1,34 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Pantry</title>
-  </head>
-  <body> 
-    <%- include('../partials/_navbar.ejs') %>
-    <h1>Welcome to my Pantry</h1>
-    <a href="/users/<%=user._id%>/foods/new">Add an Item</a>
-    <%if(food.length===0){%>
-         <p>Your pantry is empty.Add your first item</p>
+<%- include('../partials/_navbar.ejs') %>
 
-   <% }else{%>
-        <ul>
-           <% foods.foreach(function(food){%>
-                <li>
-                    <a href="/users/<%=user._id%>/foods/<%=food._id%>"><%food.name%></a>
-                         <a href="/users/<%=user._id%>/<%=food._id%>/edit">Edit</a>
-                             <form action="/users/<%=user._id%>/<%=food._id%?_method=Delete" method="POST">
-                                <button type="submit">Delete</button>
-                                </form>
-                </li>
-                <%});%>
+<h1>My Pantry</h1>
 
-                              
-                </ul>
-            <%}%>
-    
-   
+<a href="/foods/new">Add New Item</a>
 
-  </body>
-</html>
+<% if (pantry.length === 0) { %>
+  <p>Your pantry is empty. Start adding items!</p>
+<% } else { %>
+  <ul>
+    <% pantry.forEach(function(food) { %>
+      <li>
+        <a href="/foods/<%= food._id %>"><%= food.name %></a>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>

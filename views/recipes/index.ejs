@@ -1,11 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Recipes</title>
-  </head>
-  <body>
-    <h1>Welcome to My Recipes</h1>
-  </body>
-</html>
+<%- include('../partials/_navbar.ejs') %>
+
+<h1>My Recipes</h1>
+
+<a href="/recipes/new">Add New Recipe</a>
+
+<% if (recipes.length === 0) { %>
+  <p>You haven't added any recipes yet.</p>
+<% } else { %>
+  <ul>
+    <% recipes.forEach(function(recipe) { %>
+      <li>
+        <a href="/recipes/<%= recipe._id %>"><%= recipe.name %></a>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>

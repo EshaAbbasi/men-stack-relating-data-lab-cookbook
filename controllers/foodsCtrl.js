@@ -1,103 +1,76 @@
-const User=require('../models/user');
-const Recipe = require('../models/recipe');
-const Ingredient=require('../models/ingredient');
-const index=async(req,res)=>
-{
-    try{
-        const user=await User.findById(req.params.id);
-        res.render('foods/index.ejs',{foods:user.foods})
-    }
-    catch(err){
-        res.redirect('/')
-    }
-};
-const newApp=async(req,res)=>
-{
-    try{
-         res.render('foods/new.ejs')}
-    catch(err){
-        res.redirect('/');
+const User = require('../models/user');
 
-
-    }
-};
-const create=async(req,res)=>{
-    try{
-        const user=await User.findById(req.params.id);
-        user.foods.push(req.body);
-        await user.save();
-        res.redirect('/users/:id/foods');
-
-    }
-    catch(err){
- console.log(err);
-        res.redirect('/users/:id/foods/new');
-
-}}
-
-    const show=async(req,res)=>
-    {
-    try{
-        const user= await User.findById(req.params.id);
-const food=user.foods.id(req.params.appId);
-         res.render('foods/show.ejs',{food})}
-    catch(err){
-        res.redirect('/');
-
-
-    }
-};
-const deleteApp = async(req,res)=>
-{
-    try{
-        const user= await User.findById(req.params.id);
-user.foodss.pull(req.params.appId);
-await user.save();
-res.redirect('/users/${user._id}/foods');}
-       
-    catch(err){
-        res.redirect('/');
-
-
-    }
-};
-const edit = async(req,res)=>
-{
-    try{
-        const user= await User.findById(req.params.id);
-const food=user.foods.id(req.params.appId);
-await user.save();
-res.render('foods/edit.ejs',{food});
-}
-       
-    catch(err){
-        res.redirect('/');
-
-    }}
-const update = async(req,res)=>
-{
-    try{
-        const user= await User.findById(req.params.id);
-const food=user.foods.id(req.params.appId);
-application.set(req.body);
-await user.save();
-  res.redirect(`/users/${user._id}/foods/${food._id}`);
-}
-       
-    catch(err){
-        res.redirect('/');
-
-
-    }
+const index = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user._id);
+    res.render('foods/index.ejs', { pantry: user.pantry });
+  } catch (err) {
+    console.log(err);
+    res.redirect('/');
+  }
 };
 
+const newFood = async (req, res) => {
+  res.render('foods/new.ejs');
+};
 
-module.exports={
-    index,
-    new:newApp,
-    create,
-    show,
-    delete:deleteApp,
-edit,
-update
-}
+const create = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user._id);
+    user.pantry.push(req.body);
+    await user.save();
+    res.redirect('/foods');
+  } catch (err) {
+    console.log(err);
+    res.redirect('/foods');
+  }
+};
+
+const show = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user._id);
+    const food = user.pantry.id(req.params.id);
+    res.render('foods/show.ejs', { food });
+  } catch (err) {
+    console.log(err);
+    res.redirect('/foods');
+  }
+};
+
+const edit = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user._id);
+    const food = user.pantry.id(req.params.id);
+    res.render('foods/edit.ejs', { food });
+  } catch (err) {
+    console.log(err);
+    res.redirect('/foods');
+  }
+};
+
+const update = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user._id);
+    const food = user.pantry.id(req.params.id);
+    food.name = req.body.name;
+    await user.save();
+    res.redirect(`/foods/${req.params.id}`);
+  } catch (err) {
+    console.log(err);
+    res.redirect('/foods');
+  }
+};
+
+const deleteFood = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user._id);
+    user.pantry.id(req.params.id).deleteOne();
+    await user.save();
+    res.redirect('/foods');
+  } catch (err) {
+    console.log(err);
+    res.redirect('/foods');
+  }
+};
+
+module.exports = { index, new: newFood, create, show, edit, update, delete: deleteFood };
