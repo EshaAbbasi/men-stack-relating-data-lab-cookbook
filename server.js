@@ -1,12 +1,15 @@
 require('dotenv').config();
 require('./config/database');
-
+const path = require('path');
 const express = require('express');
+
+const app = express();
+
 const session = require('express-session');
 const MongoStore = require('connect-mongo').MongoStore;
 const methodOverride = require('method-override');
 const morgan = require('morgan');
-const path = require('path');
+
 
 const isSignedIn = require('./middleware/isSignedIn');
 const addUserToViews = require('./middleware/addUserToViews');
@@ -17,7 +20,6 @@ const ingredientsCtrl = require('./controllers/ingredients');
 const recipesCtrl = require('./controllers/recipes');
 const usersCtrl = require('./controllers/usersCtrl');
 
-const app = express();
 const port = process.env.PORT ? process.env.PORT : '3000';
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -59,15 +61,16 @@ app.get('/protected', (req, res) => {
 app.get('/foods', foodsCtrl.index);
 app.get('/foods/new', foodsCtrl.new);
 app.post('/foods', foodsCtrl.create);
+
+// INGREDIENTS
+app.get('/foods/ingredients', ingredientsCtrl.index);
+app.get('/foods/ingredients/new', ingredientsCtrl.new);
+app.post('/foods/ingredients', ingredientsCtrl.create);
+
 app.get('/foods/:id', foodsCtrl.show);
 app.get('/foods/:id/edit', foodsCtrl.edit);
 app.put('/foods/:id', foodsCtrl.update);
 app.delete('/foods/:id', foodsCtrl.delete);
-
-// INGREDIENTS (referenced by recipes)
-app.get('/foods/ingredients', ingredientsCtrl.index);
-app.get('/foods/ingredients/new', ingredientsCtrl.new);
-app.post('/foods/ingredients', ingredientsCtrl.create);
 
 // RECIPES
 app.get('/recipes', recipesCtrl.index);
